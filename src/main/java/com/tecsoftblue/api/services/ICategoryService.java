@@ -1,10 +1,10 @@
 package com.tecsoftblue.api.services;
 
-import com.tecsoftblue.api.entities.Category;
+import com.tecsoftblue.api.dto.CategoryResponse;
 
 import java.util.List;
 
 public interface ICategoryService {
 
-    List<Category> findAll();
+    List<CategoryResponse> findAll();
 }
