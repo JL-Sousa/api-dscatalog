@@ -3,6 +3,7 @@ package com.tecsoftblue.api.services;
 import com.tecsoftblue.api.dto.CategoryResponse;
 import com.tecsoftblue.api.entities.Category;
 import com.tecsoftblue.api.repositories.CategoryRepository;
+import com.tecsoftblue.api.services.exceptions.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,15 @@ public class CategoryServiceImpl implements ICategoryService{
     @Transactional(readOnly = true)
     public List<CategoryResponse> findAll() {
         List<Category> list = categoryRepository.findAll();
-        return list.stream().map(category -> new CategoryResponse(category.getName())).collect(Collectors.toList());
+        return list.stream().map(category -> new CategoryResponse( category.getId(),category.getName()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CategoryResponse findById(Long id) {
+        var result = categoryRepository.findById(id);
+        Category entity = result.orElseThrow(() -> new EntityNotFoundException("Entity not found!"));
+        return new CategoryResponse(entity.getId(), entity.getName());
     }
 }

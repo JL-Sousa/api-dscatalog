@@ -1,4 +1,4 @@
 package com.tecsoftblue.api.dto;
 
-public record CategoryResponse(String name) {
+public record CategoryResponse(Long id, String name) {
 }
