@@ -1,7 +1,7 @@
 package com.tecsoftblue.api.controllers;
 
 import com.tecsoftblue.api.dto.CategoryResponse;
-import com.tecsoftblue.api.dto.CreateCategoryRequest;
+import com.tecsoftblue.api.dto.CategoryRequest;
 import com.tecsoftblue.api.services.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +31,16 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryResponse> insert(@RequestBody CreateCategoryRequest request) {
+    public ResponseEntity<CategoryResponse> insert(@RequestBody CategoryRequest request) {
         var result = service.insert(request);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(result.id()).toUri();
         return ResponseEntity.created(uri).body(result);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<CategoryResponse> update(@PathVariable Long id, @RequestBody CategoryRequest request) {
+        var result = service.update(id, request);
+        return  ResponseEntity.ok().body(result);
     }
 }

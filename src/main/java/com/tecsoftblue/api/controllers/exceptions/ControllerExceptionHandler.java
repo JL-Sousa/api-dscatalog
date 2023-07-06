@@ -1,6 +1,6 @@
 package com.tecsoftblue.api.controllers.exceptions;
 
-import com.tecsoftblue.api.services.exceptions.EntityNotFoundException;
+import com.tecsoftblue.api.services.exceptions.ControllerNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +12,8 @@ import java.time.Instant;
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<StandardError> entityNotFound(EntityNotFoundException e, HttpServletRequest request) {
+    @ExceptionHandler(ControllerNotFoundException.class)
+    public ResponseEntity<StandardError> entityNotFound(ControllerNotFoundException e, HttpServletRequest request) {
         StandardError err = new StandardError();
         err.setTimestamp(Instant.now());
         err.setStatus(HttpStatus.NOT_FOUND.value());
