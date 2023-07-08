@@ -5,9 +5,12 @@ import com.tecsoftblue.api.dto.CategoryRequest;
 import com.tecsoftblue.api.entities.Category;
 import com.tecsoftblue.api.repositories.CategoryRepository;
 import com.tecsoftblue.api.services.exceptions.ControllerNotFoundException;
+import com.tecsoftblue.api.services.exceptions.DatabaseException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -55,5 +58,19 @@ public class CategoryServiceImpl implements ICategoryService{
         } catch (EntityNotFoundException e) {
             throw new ControllerNotFoundException("Id not found " + id);
         }
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void delete(Long id) {
+        if(!categoryRepository.existsById(id)) {
+            throw new ControllerNotFoundException("Recurso nao encrontrado!");
+        }
+        try {
+            categoryRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Falha de intregridade referencial!");
+        }
+
     }
 }
