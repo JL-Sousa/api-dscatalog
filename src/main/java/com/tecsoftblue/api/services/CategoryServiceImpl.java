@@ -9,12 +9,12 @@ import com.tecsoftblue.api.services.exceptions.DatabaseException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements ICategoryService{
@@ -24,10 +24,9 @@ public class CategoryServiceImpl implements ICategoryService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<CategoryResponse> findAll() {
-        List<Category> list = categoryRepository.findAll();
-        return list.stream().map(category -> new CategoryResponse( category.getId(),category.getName()))
-                .collect(Collectors.toList());
+    public Page<CategoryResponse> findAllPaged(PageRequest pageRequest) {
+        Page<Category> list = categoryRepository.findAll(pageRequest);
+        return list.map(category -> new CategoryResponse( category.getId(),category.getName()));
     }
 
     @Override
