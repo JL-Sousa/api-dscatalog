@@ -3,13 +3,12 @@ package com.tecsoftblue.api.services;
 import com.tecsoftblue.api.dto.CategoryResponse;
 import com.tecsoftblue.api.dto.CategoryRequest;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 public interface ICategoryService {
 
-    Page<CategoryResponse> findAllPaged(PageRequest pageRequest);
+    Page<CategoryResponse> findAllPaged(Pageable pageable);
 
     CategoryResponse findById(Long id);
 

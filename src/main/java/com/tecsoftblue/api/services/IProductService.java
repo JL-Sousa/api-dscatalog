@@ -2,11 +2,11 @@ package com.tecsoftblue.api.services;
 
 import com.tecsoftblue.api.dto.ProductDTO;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 public interface IProductService {
 
-    Page<ProductDTO> findAllPaged(PageRequest pageRequest);
+    Page<ProductDTO> findAllPaged(Pageable pageable);
 
     ProductDTO findById(Long id);
 

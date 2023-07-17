@@ -10,7 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +24,8 @@ public class CategoryServiceImpl implements ICategoryService{
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CategoryResponse> findAllPaged(PageRequest pageRequest) {
-        Page<Category> list = categoryRepository.findAll(pageRequest);
+    public Page<CategoryResponse> findAllPaged(Pageable pageable) {
+        Page<Category> list = categoryRepository.findAll(pageable);
         return list.map(category -> new CategoryResponse( category.getId(),category.getName()));
     }
 
