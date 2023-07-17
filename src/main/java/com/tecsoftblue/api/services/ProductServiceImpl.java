@@ -1,10 +1,10 @@
 package com.tecsoftblue.api.services;
 
-import com.tecsoftblue.api.dto.CategoryRequest;
-import com.tecsoftblue.api.dto.CategoryResponse;
+import com.tecsoftblue.api.dto.CategoryDTO;
 import com.tecsoftblue.api.dto.ProductDTO;
 import com.tecsoftblue.api.entities.Category;
 import com.tecsoftblue.api.entities.Product;
+import com.tecsoftblue.api.repositories.CategoryRepository;
 import com.tecsoftblue.api.repositories.ProductRepository;
 import com.tecsoftblue.api.services.exceptions.ControllerNotFoundException;
 import com.tecsoftblue.api.services.exceptions.DatabaseException;
@@ -23,6 +23,9 @@ public class ProductServiceImpl implements IProductService{
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -43,17 +46,17 @@ public class ProductServiceImpl implements IProductService{
     @Transactional
     public ProductDTO insert(ProductDTO request) {
         Product entity = new Product();
-        //entity.setName(request.name());
+        copyDtoToEntity(request, entity);
         entity = productRepository.save(entity);
         return new ProductDTO(entity);
     }
 
     @Override
     @Transactional
-    public ProductDTO update(Long id, CategoryRequest request) {
+    public ProductDTO update(Long id, ProductDTO request) {
         try {
             Product entity = productRepository.getReferenceById(id);
-            //entity.setName(request.name());
+            copyDtoToEntity(request, entity);
             entity = productRepository.save(entity);
             return new ProductDTO(entity);
         } catch (EntityNotFoundException e) {
@@ -71,6 +74,21 @@ public class ProductServiceImpl implements IProductService{
             productRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Falha de intregridade referencial!");
+        }
+
+    }
+
+    private void copyDtoToEntity(ProductDTO request, Product entity) {
+        entity.setName(request.getName());
+        entity.setDescription(request.getDescription());
+        entity.setDate(request.getDate());
+        entity.setImgUrl(request.getImgUrl());
+        entity.setPrice(request.getPrice());
+
+        entity.getCategories().clear();
+        for(CategoryDTO catDto: request.getCategories()) {
+            Category category = categoryRepository.getReferenceById(catDto.getId());
+            entity.getCategories().add(category);
         }
 
     }
